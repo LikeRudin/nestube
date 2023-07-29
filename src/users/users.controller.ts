@@ -11,8 +11,16 @@ export class UsersController {
   async join(@Body() userdata: any, @Req() req: Request, @Res() res: Response){
     const data = await this.usersService.createUser(userdata, req as any);
     //@ts-ignore
-    return res.json(data);
+    return res.json(data)
   }
+
+  @Post("/login")
+  async login(@Body() loginData: any, @Req() req:Request, @Res() res: Response) {
+    const data = await this.usersService.login(loginData, req);
+    //@ts-ignore
+    return res.json(data)
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

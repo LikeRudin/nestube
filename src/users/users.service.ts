@@ -42,15 +42,36 @@ export class UsersService {
     if (exist) {
       return `username already exists`;
     }
-    const user = this.usersRepository.create();
-    user.username = username;
-    user.password = password;
-    await this.usersRepository.save(user);
-  
+    const user = await this.usersRepository.save(this.usersRepository.create({username, password}));
+    
     req.session.user = user;
 
     return userdata
     
+  }
+
+  async login(loginData, req){
+    const {username, password} = loginData;
+    const user = await this.usersRepository.findOne({
+      where: [{username}]
+    })
+
+    if (!user) {
+      const errorMessage = {
+        message: "user not found"
+      }
+      return errorMessage
+    }
+
+    if (user.password !== password) {
+      const errorMessage = {
+        message: "you submit wrong password"
+      }
+      return errorMessage
+    }
+    req.session.user = user;
+    return loginData;
+
   }
 
   remove(id: number) {

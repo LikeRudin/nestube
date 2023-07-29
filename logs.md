@@ -223,4 +223,9 @@ export: [TypeORMModule]
 
 5. deal async await with userService
 
-Question : it is necessary to 
+
+### 0730 first commit
+
+add bycrypt to hash password before insert
+
+by listener typeorm

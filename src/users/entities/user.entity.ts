@@ -1,6 +1,7 @@
 import { IsString } from "class-validator";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,} from "typeorm";
-
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,} from "typeorm";
+import * as bcrypt from "bcrypt";
+import { InternalServerErrorException } from "@nestjs/common";
 
 @Entity()
 export class UserEntity {
@@ -18,6 +19,16 @@ export class UserEntity {
     @Column()
     @IsString()
     password: string;
+
+    @BeforeInsert()
+    async hashPassword(): Promise<void> {
+        try{
+            this.password = await bcrypt.hash(this.password, 5);
+        } catch (error){
+            console.log(error)
+            throw InternalServerErrorException
+        }
+    }
 
 
 }
