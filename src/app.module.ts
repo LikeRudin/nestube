@@ -7,6 +7,7 @@ import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import "dotenv/config";
 
+
 @Module({ 
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
@@ -15,8 +16,8 @@ import "dotenv/config";
     username: process.env.DB_USERNAME,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    entities: ['./users/entities/*.entity{.ts}'],
-    synchronize: false,
+    entities: [__dirname + `/**/*.entity{.ts,.js}`],
+    synchronize: true,
   }),
   UsersModule],
   controllers: [AppController, UsersController],
