@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity  } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
+import {compare} from "bcrypt";
 
 interface Request {
   session: any
@@ -22,7 +23,7 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return {a: "string", b:"he"};
   }
 
   findOne(id: number) {
@@ -63,7 +64,9 @@ export class UsersService {
       return errorMessage
     }
 
-    if (user.password !== password) {
+    const passwordOk = await compare(password, user.password)
+  
+    if (!passwordOk) {
       const errorMessage = {
         message: "you submit wrong password"
       }
