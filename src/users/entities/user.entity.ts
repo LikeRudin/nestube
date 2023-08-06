@@ -24,6 +24,12 @@ export class UserEntity {
     @IsEmail()
     email: string;
 
+    @Column()
+    age: number;
+
+    @Column()
+    gender: string;
+
     @BeforeInsert()
     async hashPassword(): Promise<void> {
         try{
