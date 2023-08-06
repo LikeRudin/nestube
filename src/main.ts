@@ -4,6 +4,7 @@ import "dotenv/config";
 import * as session from 'express-session';
 import * as MySQLStore from 'express-mysql-session';
 import * as mysql2 from "mysql2/promise";
+import { ValidationPipe } from '@nestjs/common';
 
 
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,11 @@ async function bootstrap() {
     saveUninitialized: false,
     store:sessionStore
   }));
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true
+  }))
   await app.listen(PORT);
   console.log(`server is running on http://localhost:${PORT}/`)
 }

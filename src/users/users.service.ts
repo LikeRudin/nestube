@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity  } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -18,36 +16,22 @@ export class UsersService {
     private usersRepository: Repository<UserEntity>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return {a: "string", b:"he"};
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
 
   async createUser (userdata: any, req: Request) {
     const {username, password } = userdata;
-    const exist = await this.usersRepository.findOne({
-      where:[{username}]
-    });
+    const exist = await this.usersRepository.findOne({where:[{username}]});
 
     if (exist) {
-      return `username already exists`;
+      return { 
+        ok: false,
+        message: `username already exists`
+      };
     }
     const user = await this.usersRepository.save(this.usersRepository.create({username, password}));
     
     req.session.user = user;
 
-    return userdata
+    return { "ok": true, userdata}
     
   }
 
@@ -58,26 +42,24 @@ export class UsersService {
     })
 
     if (!user) {
-      const errorMessage = {
+      return { 
+        ok: false,
         message: "user not found"
-      }
-      return errorMessage
+      };
     }
-
     const passwordOk = await compare(password, user.password)
   
     if (!passwordOk) {
-      const errorMessage = {
+      return { 
+        ok: false,
         message: "you submit wrong password"
-      }
-      return errorMessage
+      };
     }
     req.session.user = user;
-    return loginData;
-
+    return { "ok": true, loginData}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  async logout (req) {
+    return await req.session.destroy();
+  } 
 }

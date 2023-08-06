@@ -229,3 +229,84 @@ export: [TypeORMModule]
 add bycrypt to hash password before insert
 
 by listener typeorm
+
+
+### 0807 create-user validator
+
+1. `npm install class-validator`
+
+2. create DTO file
+
+3. set app.GlobalPipes(new ValidationPipe {
+  whiltelist,
+  forbidenNonWhitelist,
+  transformer
+})
+
+```ts
+//users/dto/create-user.dto.ts
+import { IsString } from "class-validator";
+
+export class CreateUserDto {
+
+    @IsString()
+    readonly username:string;
+
+    @IsString()
+    readonly password:string;
+}
+```
+
+
+
+```ts
+//main.ts
+ app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true
+  }))
+```
+
+https://www.npmjs.com/package/class-validator
+https://dev.to/sarathsantoshdamaraju/nestjs-and-class-validator-cheat-sheet-13ao
+
+before class-validator
+```json
+Post http://localhost:8000/users/join
+
+{
+	"username": "test99",
+	"password": "test99",
+	"kimchi": "delicious"
+}
+
+{
+	"ok": false,
+	"message": "username already exists"
+}
+```
+after class validator
+
+```json
+{
+	"username": "test99",
+	"password": "test99",
+	"kimchi": "delcious"
+}
+
+{
+	"message": [
+		"property kimchi should not exist"
+	],
+	"error": "Bad Request",
+	"statusCode": 400
+}
+```
+
+always remeber: DTO should used as type for input of controller
+
+```ts
+@Post("/join")
+async join(@Body() userdata: CreateUserDto, @Req() req: Request)
+```
