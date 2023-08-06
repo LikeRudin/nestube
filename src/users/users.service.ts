@@ -18,7 +18,7 @@ export class UsersService {
 
 
   async createUser (userdata: any, req: Request) {
-    const {username, password, passwordConfirm} = userdata;
+    const {username, password, passwordConfirm, email} = userdata;
     const exist = await this.usersRepository.findOne({where:[{username}]});
 
     if (exist) {
@@ -33,7 +33,7 @@ export class UsersService {
         message: `password doesn't match`
       }
     }
-    const user = await this.usersRepository.save(this.usersRepository.create({username, password}));
+    const user = await this.usersRepository.save(this.usersRepository.create({username, password, email}));
     
     req.session.user = user;
 
@@ -66,6 +66,17 @@ export class UsersService {
   }
 
   async logout (req) {
-    return await req.session.destroy();
-  } 
+    await req.session.destroy();
+    return { ok: true,
+      "message": "succefully logout"} 
+    }
+
+  async delete(req){
+    const user = req.session.user
+    await this.usersRepository.delete({dbId: user.dbId});
+    return {
+      "ok": true,
+      "message": "succefully deleted your account" 
+    }
+  }
 }

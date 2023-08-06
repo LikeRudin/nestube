@@ -22,6 +22,11 @@ export class UsersController {
   @Post("/logout")
   async logout(@Req() req:Request){
     return await this.usersService.logout(req);
-  }  
+  }
+
+  @Delete("/delete")
+  async delete(@Req() req:Request) {
+    return await this.usersService.delete(req);
+  }
 
 }

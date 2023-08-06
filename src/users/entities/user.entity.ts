@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsEmail, IsString } from "class-validator";
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,} from "typeorm";
 import * as bcrypt from "bcrypt";
 import { InternalServerErrorException } from "@nestjs/common";
@@ -19,6 +19,10 @@ export class UserEntity {
     @Column()
     @IsString()
     password: string;
+
+    @Column()
+    @IsEmail()
+    email: string;
 
     @BeforeInsert()
     async hashPassword(): Promise<void> {
