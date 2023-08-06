@@ -18,7 +18,7 @@ export class UsersService {
 
 
   async createUser (userdata: any, req: Request) {
-    const {username, password } = userdata;
+    const {username, password, passwordConfirm} = userdata;
     const exist = await this.usersRepository.findOne({where:[{username}]});
 
     if (exist) {
@@ -26,6 +26,12 @@ export class UsersService {
         ok: false,
         message: `username already exists`
       };
+    }
+    if (password !== passwordConfirm) {
+      return {
+        ok: false,
+        message: `password doesn't match`
+      }
     }
     const user = await this.usersRepository.save(this.usersRepository.create({username, password}));
     

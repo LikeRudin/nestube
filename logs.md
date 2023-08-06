@@ -310,3 +310,26 @@ always remeber: DTO should used as type for input of controller
 @Post("/join")
 async join(@Body() userdata: CreateUserDto, @Req() req: Request)
 ```
+
+### add password confirmastion on join logic
+```ts
+ if (password !== passwordConfirm) {
+      return {
+        ok: false,
+        message: `password doesn't match`
+      }
+    }
+```
+
+```json
+{
+	"username": "test98",
+	"password": "test98",
+	"passwordConfirm": "test99"
+}
+{
+	"ok": false,
+	"message": "password doesn't match"
+}
+
+```
