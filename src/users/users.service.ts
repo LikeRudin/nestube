@@ -18,7 +18,7 @@ export class UsersService {
 
 
   async createUser (userdata: any, req: Request) {
-    const {username, password, passwordConfirm, email} = userdata;
+    const {username, password, passwordConfirm, email, age, gender} = userdata;
     const exist = await this.usersRepository.findOne({where:[{username}]});
 
     if (exist) {
@@ -33,7 +33,7 @@ export class UsersService {
         message: `password doesn't match`
       }
     }
-    const user = await this.usersRepository.save(this.usersRepository.create({username, password, email}));
+    const user = await this.usersRepository.save(this.usersRepository.create({username, password, email, age, gender}));
     
     req.session.user = user;
 
@@ -78,5 +78,42 @@ export class UsersService {
       "ok": true,
       "message": "succefully deleted your account" 
     }
+  }
+  async update (userdata, req){
+    const {username, email, password} = userdata;
+    const user = await this.usersRepository.findOne({ where: [req.session.user.username]});
+    if(!user) {
+      return {
+        "ok": false,
+        "message": "cannot find logged in user"
+      }
+    }
+    const ok = await compare(password, user.password);
+    if(!ok){
+      return {
+        "ok": false,
+        "message": "you entered wrong password"
+      }
+    }
+
+    const exist = this.usersRepository.findOne({where: [username, email]});
+    if (exist) {
+      return {
+        "ok": false,
+        "message": "there is already using submitted username / email"
+      }
+    }
+
+    user.username = username;
+    user.email = email;
+    
+    await this.usersRepository.save(user);
+    req.session.user = user
+
+    return {
+      "ok": true,
+      "mesaage": "your info is succefully updated"
+    }
+
   }
 }

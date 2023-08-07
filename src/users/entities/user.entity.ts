@@ -1,5 +1,5 @@
 import { IsEmail, IsString } from "class-validator";
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,} from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,} from "typeorm";
 import * as bcrypt from "bcrypt";
 import { InternalServerErrorException } from "@nestjs/common";
 
@@ -10,6 +10,9 @@ export class UserEntity {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 
 
     @Column()

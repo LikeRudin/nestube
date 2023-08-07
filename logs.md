@@ -333,3 +333,40 @@ async join(@Body() userdata: CreateUserDto, @Req() req: Request)
 }
 
 ```
+
+### 0807 add properties to userEntity
+
+age: number
+
+gender: string
+
+```json
+{
+	"username": "test00",
+	"password": "test00",
+	"passwordConfirm": "test00",
+	"email": "blueskyto@me.com",
+	"age": 2080,
+	"gender": "attack-helicopter"
+}
+
+{
+	"ok": true,
+	"userdata": {
+		"username": "test00",
+		"password": "test00",
+		"passwordConfirm": "test00",
+		"email": "blueskyto@me.com",
+		"age": 2080,
+		"gender": "attack-helicopter"
+	}
+}
+
+```
+
+
+### 0807 💥Error
+
+```s
+[Nest] 39792  - 08/07/2023, 8:47:18 PM   ERROR [ExceptionsHandler] Property "0" was not found in "UserEntity". Make sure your query is correct.
+```
