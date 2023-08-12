@@ -36,8 +36,8 @@ export class UsersService {
     const user = await this.usersRepository.save(this.usersRepository.create({username, password, email, age, gender}));
     
     req.session.user = user;
-
-    return { "ok": true, userdata}
+    return { "ok": true, 
+    "uesrData": userdata}
     
   }
 
@@ -64,7 +64,7 @@ export class UsersService {
       };
     }
     req.session.user = user;
-    return { "ok": true, loginData}
+    return { "ok": true, "userData": user}
   }
 
   async logout (req) {
@@ -101,7 +101,6 @@ export class UsersService {
       }
     }
     
-    // check data for updating username and email are already exist 
     const exist = await this.usersRepository.findOne({
       where: [
         { username: username },
@@ -116,7 +115,6 @@ export class UsersService {
       }
     }
     
-
     user.username = username;
     user.email = email;
     
@@ -126,8 +124,7 @@ export class UsersService {
     return {
       "ok": true,
       "mesaage": "your info is succefully updated",
-      "user": user,
-      "exist": exist
+      "userData" : user
     }
 
   }
