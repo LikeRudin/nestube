@@ -46,7 +46,6 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where: [{username}]
     })
-    console.log(`login typeof ${typeof user}`);
 
     if (!user) {
       return { 
@@ -91,7 +90,6 @@ export class UsersService {
         "message": "cannot find logged in user"
       }
     }
-    console.log(`find logged in user: ${user}`);
 
     const passwordOk = await compare(password, user.password);
     if(!passwordOk){
