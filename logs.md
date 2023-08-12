@@ -390,9 +390,8 @@ cannot submit options as `key:value` shape
 ### 0812 💥 query returns empty object
 
 if i don;t give a `await` keyword,
-`findOne`` query return empty object
+then `findOne` query return empty object
 
-not a falsy
- 
+remember, empty objects like `{}, []` are not falsy
 
 
