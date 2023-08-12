@@ -29,7 +29,7 @@ export class UsersController {
     return await this.usersService.delete(req);
   }
 
-  @Patch("/edit")
+  @Patch("/update")
   async update(@Body() userdata, @Req() req){
     return await this.usersService.update(userdata, req);
   }

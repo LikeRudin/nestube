@@ -46,11 +46,13 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where: [{username}]
     })
+    console.log(`login typeof ${typeof user}`);
 
     if (!user) {
       return { 
-        ok: false,
-        message: "user not found"
+        "ok": false,
+        "message": "user not found",
+        "userData": user
       };
     }
     const passwordOk = await compare(password, user.password)
@@ -81,38 +83,51 @@ export class UsersService {
   }
   async update (userdata, req){
     const {username, email, password} = userdata;
-    const user = await this.usersRepository.findOne({ where: [req.session.user.username]});
+    const sessionUsername = req.session.user.username;
+    const user = await this.usersRepository.findOne({ where:[{username: sessionUsername}]});
     if(!user) {
       return {
         "ok": false,
         "message": "cannot find logged in user"
       }
     }
-    const ok = await compare(password, user.password);
-    if(!ok){
+    console.log(`find logged in user: ${user}`);
+
+    const passwordOk = await compare(password, user.password);
+    if(!passwordOk){
       return {
         "ok": false,
         "message": "you entered wrong password"
       }
     }
+    
+    // check data for updating username and email are already exist 
+    const exist = await this.usersRepository.findOne({
+      where: [
+        { username: username },
+        { email: email } 
+      ],
+    });
 
-    const exist = this.usersRepository.findOne({where: [username, email]});
     if (exist) {
       return {
         "ok": false,
         "message": "there is already using submitted username / email"
       }
     }
+    
 
     user.username = username;
     user.email = email;
     
     await this.usersRepository.save(user);
-    req.session.user = user
-
+    req.session.user = user;
+    
     return {
       "ok": true,
-      "mesaage": "your info is succefully updated"
+      "mesaage": "your info is succefully updated",
+      "user": user,
+      "exist": exist
     }
 
   }

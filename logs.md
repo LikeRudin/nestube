@@ -370,3 +370,29 @@ gender: string
 ```s
 [Nest] 39792  - 08/07/2023, 8:47:18 PM   ERROR [ExceptionsHandler] Property "0" was not found in "UserEntity". Make sure your query is correct.
 ```
+
+### 0812 💥 Property "0" was not found in "UserEntity"
+
+handle above Error 
+
+when quering with `where` option,
+cannot submit options as `key:value` shape
+
+```js
+// this is not correct
+{where: [username:"target Name", email: "target Email"]}
+
+// this is correct
+{where: [{username:"target Name"}, {email : "target Email"}]}
+
+```
+
+### 0812 💥 query returns empty object
+
+if i don;t give a `await` keyword,
+`findOne`` query return empty object
+
+not a falsy
+ 
+
+
